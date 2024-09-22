@@ -1,0 +1,117 @@
+<style>
+	body{
+		font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+		margin:10px;
+		padding:10px;
+		font-size: larger;
+	}
+
+</style>
+
+
+<a href="/">HOME</a>
+
+<p>Logged in thanks</p>
+<br/>
+<button id="logout">Logout</button>
+<br/>
+<br/>
+<button id="makeRequest1">Make request 1</button>
+<button id="makeRequest2">Make request 2</button>
+<button id="makeRequest3">Make request 3</button>
+<br/>
+<script>
+
+window.onload = function() {
+    const hash = window.location.hash;
+    if (hash) {
+        const params = new URLSearchParams(hash.slice(1));
+        const accessToken = params.get('access_token');
+        
+        if (accessToken) {
+            // Store the token in localStorage
+            localStorage.setItem('access_token', accessToken);
+            console.log("Token stored in localStorage!");
+        } 
+		else {
+            console.log("No access token found.");
+        }
+    }
+};
+
+function makeRequest1() {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        fetch('/protected-route', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }
+	else {
+        console.log("No access token available in localStorage.");
+    }
+}
+
+function makeRequest2() {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        fetch('/protected-route-get', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }
+	else {
+        console.log("No access token available in localStorage.");
+    }
+}
+
+function makeRequest3() {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        fetch('/protected-route-post', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }
+	else {
+        console.log("No access token available in localStorage.");
+    }
+}
+
+
+
+document.getElementById('makeRequest1').onclick = ()=>{
+	makeRequest1()
+}
+
+document.getElementById('makeRequest2').onclick = ()=>{
+	makeRequest2()
+}
+
+document.getElementById('makeRequest3').onclick = ()=>{
+	makeRequest3()
+}
+
+document.getElementById('logout').onclick = ()=>{
+	localStorage.removeItem('access_token')
+	console.log("Token removed from localStorage!")
+	window.location.href = "/dologout"
+}
+
+
+</script>
